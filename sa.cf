@@ -1,0 +1,404 @@
+######################### udienz start here ###########
+
+
+include /var/lib/spamassassin/3.003002/70_sare_header_cf_sare_sa-update_dostech_net/200810271100.cf
+include /etc/spamassassin/local/radsby.cf
+include /srv/spamassassin/sandbox/jhardin/20_misc_testing.cf
+include /srv/spamassassin/sandbox/jhardin/20_advance_fee_reevolved.cf
+include /srv/spamassassin/sandbox/jhardin/20_fillform.cf
+include /srv/spamassassin/sandbox/jhardin/20_lotsa_money.cf
+include /srv/spamassassin/sandbox/jhardin/20_MIME_in_body.cf
+include /srv/spamassassin/sandbox/jhardin/20_MIME_no_text.cf
+include /srv/spamassassin/sandbox/jhardin/20_postcards.cf
+include /srv/spamassassin/sandbox/jhardin/20_shared_subrules.cf
+include /srv/spamassassin/sandbox/jhardin/20_tbird_image_spam.cf
+include /srv/spamassassin/sandbox/jhardin/20_thirdparty.cf
+include /srv/spamassassin/sandbox/jhardin/20_uri_obfu_ws.cf
+
+use_bayes 1
+bayes_auto_learn 1
+bayes_ignore_header X-Bogosity
+bayes_ignore_header X-Spam-Checker-Version
+bayes_ignore_header X-Spam-Flag
+bayes_ignore_header X-Spam-Level
+bayes_ignore_header X-Spam-Status
+bayes_ignore_header X-IronPort-Anti-Spam-Filtered
+bayes_ignore_header X-IronPort-Anti-Spam-Result
+bayes_ignore_header X-IronPort-AV
+bayes_ignore_header DKIM-Signature
+bayes_ignore_header DomainKey-Signature
+add_header all Bayes score:_BAYES_ _TOKENSUMMARY_ spammytokens:_SPAMMYTOKENS(5)_ hammytokens:_HAMMYTOKENS(5)_
+
+## New plugin FromNotReplyTo
+#ifplugin Mail::SpamAssassin::Plugin::FromNotReplyTo
+ header FROM_NOT_REPLYTO eval:check_for_from_not_reply_to()
+ score FROM_NOT_REPLYTO 3.0
+ describe FROM_NOT_REPLYTO From: does not match Reply-To:
+#endif
+
+## New plugin SaveHits.pm https://github.com/smfreegard/SaveHits
+ifplugin Mail::SpamAssassin::Plugin::SaveHits
+savehits_dir /var/lib/amavis/savehits/
+endif
+
+
+# DNSBL
+# spam.dnsbl.anonmails.de
+header RCVD_IN_ANONMAILS eval:check_rbl('anonmails', 'spam.dnsbl.anonmails.de.')
+describe RCVD_IN_ANONMAILS Relay is listed in spam.dnsbl.anonmails.de
+tflags RCVD_IN_ANONMAILS net
+score RCVD_IN_ANONMAILS 5.0
+
+header BARRACUDA_BL eval:check_rbl('barracuda','bb.barracudacentral.org')
+tflags BARRACUDA_BL net
+score BARRACUDA_BL 5.0
+
+#uridnsbl URIBL_SBLXBL sbl-xbl.spamhaus.org.   TXT
+#body     URIBL_SBLXBL eval:check_uridnsbl('URIBL_SBLXBL')
+#describe URIBL_SBLXBL Contains a URL listed in the SBL/XBL blocklist
+#score    URIBL_SBLXBL 4
+
+header RAD_SBLXBL eval:check_rbl('sblxbl','sbl-xbl.spamhaus.org.')
+tflags RAD_SBLXBL net
+score RAD_SBLXBL 5.0
+
+header RCVD_IN_PSBL eval:check_rbl('psbl-lastexternal', 'psbl.surriel.com.')
+tflags RCVD_IN_PSBL net
+score RCVD_IN_PSBL 5.0
+
+header RCVD_IN_DNSBL_INPS_DE	eval:check_rbl_txt('inps-de','dnsbl.inps.de.')
+describe RCVD_IN_DNSBL_INPS_DE	Received via a relay in inps.de DNSBL
+tflags RCVD_IN_DNSBL_INPS_DE	net
+score RCVD_IN_DNSBL_INPS_DE	5.0
+
+# udienz at ubuntu.com rules
+header __UDIENZ_FROM_GB__ X-Relay-Countries =~ /\ GB$/
+header __UDIENZ_LP__ X-Generated-By =~ /Launchpad/
+header __UDIENZ_BULK__ Precedence =~ /bulk/
+
+header __UDIENZ_MYUBUNTU To =~ /udienz\@ubuntu.com/
+header __UDIENZ_HINET__ Received =~ /dynamic-ip.hinet.net/i
+header __UDIENZ_HINET1__ Received =~ /dynamic.hinet.net/i
+
+header __UDIENZ_CANONICAL_RELAY Received =~ /fiordland.canonical.com/
+
+header __RAD_DEBIANBUG1 From =~ /debian-www\@lists.debian.org/i
+describe __RAD_DEBIANBUG1 Mail from debian-www@l.d.o
+
+header __RAD_DEBIANBUG2 To =~ /debian-www\@lists.debian.org/i
+describe __RAD_DEBIANBUG2 Mail to debian-www@l.d.o
+
+header __RAD_DEBIANBUG3 Received =~ /wilder.debian.org/i
+describe __RAD_DEBIANBUG3 Mail from wilder.debian.org
+
+# LinkedIn
+header __TRMB_LINKEDIN_FROM    From =~ /\W(linkedin)\W/i
+header __TRMB_LINKEDIN_RP      X-Envelope-From =~/\.linkedin\.com($|>$)/i
+header __TRMB_LINKEDIN_INVITE  Subject =~ /^Invitation to connect on LinkedIn/i
+body __TRMB_LINKEDIN_BODY    /(^|\W)(wants to connect with you on LinkedIn)\W/i
+
+meta TRMB_LINKEDIN_SPAM      (!__TRMB_LINKEDIN_RP && (__TRMB_LINKEDIN_INVITE || __TRMB_LINKEDIN_FROM) && __TRMB_LINKEDIN_BODY)
+describe TRMB_LINKEDIN_SPAM      Linkedin invite email with non-linkedin sender
+score TRMB_LINKEDIN_SPAM      7.1
+
+# Auto response Spammy, thanks debian lists!
+
+body  QMAILBOUNCE	/This\s*is\s*the\s*qmail-send\s*program/i
+describe QMAILBOUNCE	Stupid qmail bounces; we don't want them
+score QMAILBOUNCE	2
+
+header RECEIVEDMAIL	subject =~ /(?:received\s*your\s*mail|(?:respuesta|risposta|response) (?:autom.tica|automatic)|auto(?:matic|m.tica)?\s*(?:respuesta|risposta|response))/i
+describe RECEIVEDMAIL	It's great that you've received our mail and automatically responded. We don't care
+score RECEIVEDMAIL	2
+
+body AUTOREBOD		/(?:received\s*your\s*mail|(?:(?:respuesta|risposta|response|message) auto(?:m.tica?|mated)?)|auto(?:m.tica?|mated)?\s*(?:respuesta|risposta|response|message))/i
+describe AUTOREBOD	It's great that you've automatically responded
+score AUTOREBOD		4
+
+header YOURMESSAGE	subject =~ /your message/i
+describe YOURMESSAGE	It's great that our message did something; we don't care
+score YOURMESSAGE	2.5
+
+body YOURMESSAGEBOD	/^Your message/i
+describe YOURMESSAGEBOD	It's great that our message did something; we don't care
+score YOURMESSAGEBOD	2.5
+
+body NODELIVERY		/(?:could not be|has not been) delivered/i
+describe NODELIVERY	We don't care if it could be or has not been delivered
+score NODELIVERY	1.5
+
+body NORESEND		/do not resend your original message/i
+describe NORESEND	If you don't want us to resend our message, why tell us?
+score NORESEND		2
+
+header PROOFPOINT	from =~ /proofpoint/
+describe PROOFPOINT	Automatic mail from proofpoint (some MTA thingie)
+score PROOFPOINT	3.5
+
+body  NOTPROCBOUNCE	/was not processed by our system/i
+describe NOTPROCBOUNCE	Bounce by system that was not processed
+score NOTPROCBOUNCE	2
+
+body ACCOUNTNOTEXIST	/(?:account\s+\S+\s+(does\s*not|doesn't)\s*exist|(?:invalid|not a valid) e-?mail address)/i
+describe ACCOUNTNOTEXIST	It's not our problem if an account doesn't exist
+score ACCOUNTNOTEXIST		2
+
+body CR_SYSTEM1		/sent by a human and not a computer/i
+describe CR_SYSTEM1	Looks like a challenge/response system
+score CR_SYSTEM1	2
+
+
+body CR_SYSTEM3		/confirm this request/i
+describe CR_SYSTEM3	Body contains confirm this request; likely a CR system
+score CR_SYSTEM3	1.5
+
+header CR_SYSTEM4	subject =~ /challenge.*response/i
+describe CR_SYSTEM4	Subject contains challenge/response
+score CR_SYSTEM4	3
+
+body CR_SYSTEM5		/confirmation of list posting/i
+describe CR_SYSTEM5	Body asks us to confirm a list posting
+score CR_SYSTEM5	3
+
+header CR_SYSTEM7	x-cr-puzzleid =~ /./i
+describe CR_SYSTEM7	Has a X-cr-puzzleid: header
+score CR_SYSTEM7	5
+
+body CR_SYSTEM8		/reply to this message/i
+describe CR_SYSTEM8	Reply to this message? are you crazy?
+score CR_SYSTEM8	3
+
+body SUPPORTMAIL3	/the email address \S+ is not registered/i
+describe SUPPORTMAIL3	We don't care if an e-mail address is not registered
+score SUPPORTMAIL3	1.5
+
+body SUPPORTMAIL4	/(reached an unmonitored e-mail address|no response will be given)/i
+describe SUPPORTMAIL4	Yeay for dumb auto-response bots that don't want a response
+score SUPPORTMAIL4	1.5
+
+header __VACATIONMAIL1	user-agent =~ /vacation/i
+describe __VACATIONMAIL1	Mail from the vacation user agent
+#score VACATIONMAIL1	0.1
+
+header __VACATIONMAIL2	X-Vacation =~ /./
+describe __VACATIONMAIL2	Has an X-Vacation header
+#score VACATIONMAIL2	0.1
+
+meta  VACATIONMAIL	(__VACATIONMAIL1 || __VACATIONMAIL2)
+describe VACATIONMAIL	Looks like a vacation message
+score VACATIONMAIL	1
+
+# Misc
+full	 PGPSIGNATURE	/-----BEGIN PGP SIGNATURE-----/
+describe PGPSIGNATURE	Has a pgp signature (may not be valid, but who cares?)
+score	 PGPSIGNATURE	-5
+
+body WORD_WITHOUT_VOWELS  /\b[bcdfghjklmnpqrstvwxz]{6,20}\b/
+describe WORD_WITHOUT_VOWELS Long word without any vowels
+score WORD_WITHOUT_VOWELS 1
+
+body DIGITS_LETTERS /(([abcdefghijklmnopqrstvwxyz]){1,9}\d{1,4}){2,9}/
+describe DIGITS_LETTERS Mixed groups of letters followed by numbers
+score DIGITS_LETTERS 1
+
+header __KOREAN1 Subject =~ /\=\?koi8\-r/
+header __KOREAN2 Content-Type =~ /charset=['"]?koi8-r.['"]?/i
+header __KOREAN3 From =~ /\=\?koi8\-r/
+
+header INFOCOUK		to =~ /\b(?:info|winner|loan|lotto|grant|win)\@(?:info\.|winner\.|loan\.|lotto\.|hotmail\.|grant\.|win\.|yahoo\.|)(?:co\.uk|net|com|org)\b/
+describe INFOCOUK	to info@co.uk
+score INFOCOUK		3
+
+header __EXAMPLECOM_FROM From =~ /\@example.(com|net|org|info|us|me|web|local)/i
+header __EXAMPLECOM_TO To =~ /\@example.(com|net|org|info|us|me|web|local)/i
+header __EXAMPLECOM_CC Cc =~ /\@example.(com|net|org|info|us|me|web|local)/i
+
+header GB2312_CHARSET	Content-Type =~ /charset=['"]?GB2312['"]?/i
+describe GB2312_CHARSET		GB2312 message
+score GB2312_CHARSET	5.00
+
+header BIG5_CHARSET    Content-Type =~ /charset=['"]?big5['"]?/i
+describe BIG5_CHARSET  Big5 message
+score BIG5_CHARSET     5.0
+
+header WINDOWS_CHARSET    Content-Type =~ /charset=['"]?windows-125.['"]?/i
+describe WINDOWS_CHARSET  Windows-1252 message
+score WINDOWS_CHARSET 0.1
+
+full GB2312ENC /\nContent-Type: .*;[\n\t ]*charset=.*gb2312["\n\r]/i
+describe GB2312ENC gb2312 message
+score GB2312ENC 1.0
+
+header KOI8_CHARSET    Content-Type =~ /charset=['"]?koi8-r.['"]?/i
+describe KOI8_CHARSET  koi8-r message
+score KOI8_CHARSET 1.0
+
+# Relay country
+header RELAYCOUNTRY_RU X-Relay-Countries =~ /\ RU$/
+describe RELAYCOUNTRY_RU Relayed through Russia
+score RELAYCOUNTRY_RU 2.0
+
+header RELAYCOUNTRY_BG X-Relay-Countries =~ /\ BG$/
+describe RELAYCOUNTRY_BG Relayed through Bulgaria
+score RELAYCOUNTRY_BG 8.0
+
+header RELAYCOUNTRY_NIGER X-Relay-Countries =~ /\ NG$/
+describe RELAYCOUNTRY_NIGER Relayed grom nigeria
+score RELAYCOUNTRY_NIGER 3.0
+
+header __RELAYCOUNTRY_ID1 X-Relay-Countries =~ /\ ID$/i
+describe __RELAYCOUNTRY_ID1 Relayed from Indonesia
+#score __RELAYCOUNTRY_ID1 -1.5
+
+header __RELAYCOUNTRY_ID2 X-Spam-Languages =~ /^id/i
+#score RELAYCOUNTRY_ID2 -1.0
+
+header __RELAYCOUNTRY_CN1 X-Relay-Countries =~ /\ CN$/i
+describe __RELAYCOUNTRY_CN1 Relay through CN
+#score __RELAYCOUNTRY_CN1 0.5
+
+# Undisclosed
+
+header __UNDISCLOSED_TO To =~ /(?:undisclosed-recipients|destinataires inconnus|recipient list not shown|(U|u)ndisclosed recipients):/i
+describe __UNDISCLOSED_TO To is unknown or forbidden, why?
+#score __UDIENZ_UNDISCLOSED_TO 2.0
+
+header __UNDISCLOSED_CC To =~ /(?:undisclosed-recipients|destinataires inconnus|recipient list not shown|(U|u)ndisclosed recipients):/i
+describe __UNDISCLOSED_CC CC is unknown or forbidden, why?
+#score __UDIENZ_UNDISCLOSED_CC 2.0
+
+## Lottery spam
+
+header SPAM_LOTTERY From =~ /(Lottery|lottery)/i
+describe SPAM_LOTTERY From, contain lottery
+score SPAM_LOTTERY 1.0
+
+header SPAM_LOTTERY1 Subject =~ /(Cash\ Alert|cash\ alert)/i
+describe SPAM_LOTTERY1 Cash alert
+score SPAM_LOTTERY1 1.0
+
+header SPAM_LEMA1 From =~ /bounces.lemagazinedunet.com/i
+describe SPAM_LEMA1 spam from lemagazinedunet
+score SPAM_LEMA1 20.0
+
+rawbody SPAM_LEMA2 /lemagazinedunet\.com/
+describe SPAM_LEMA2 spam from lemagazinedunet
+score SPAM_LEMA2 20.0
+
+rawbody AIMSCONSULTANT /aimsconsultants\.com/
+describe AIMSCONSULTANT bastard advertising
+score AIMSCONSULTANT 100.0
+
+rawbody SPAM_WELLFARGO  /wellsfargo.com/
+score SPAM_WELLFARGO 20.0
+
+header SPAM_EYD Subject =~ /Penting Pesan/i
+describe SPAM_EYD broken EYD
+score SPAM_EYD 10.0
+
+header BERCACAKRA From =~ /bercacakra.com/i
+describe BERCACAKRA spamming from BERCACAKRA.com
+score BERCACAKRA 20.0
+
+header MYFANBOX From =~ /myfanbox.com/i
+describe MYFANBOX Spamming from myfanbox.com
+score MYFANBOX 20
+
+header KEMENHUT From =~ /humaskemenhut\@gmail.com/i
+describe KEMENHUT BUMN menggunakan email Gmail? no sorry!
+score KEMENHUT 20
+
+header __FANBOX1 From =~ /myfanbox.com/i
+header __FANBOX2 Subject =~ /Your FanBox/i
+
+header __TERIMAFAX1 From =~ /fax\@ubuntu.com/
+header __TERIMAFAX2 Subject =~ /received a new fax/
+header __TERIMAFAX3 User-Agent =~ /(Mozilla|Thunderbird|Apple)/i
+
+header EMPTY_SUBJECT Subject =~ /^\s*$/ 
+score EMPTY_SUBJECT 0.5 
+
+
+#describe __FANBOX1 
+
+##################################################################################
+## META ##
+
+
+meta RELAYCOUNTRY_CN (__UDIENZ_HINET__||__UDIENZ_HINET1__ || __RELAYCOUNTRY_CN1)
+score RELAYCOUNTRY_CN 0.5
+
+meta EXAMPLECOM (__EXAMPLECOM_FROM || EXAMPLECOM_TO || EXAMPLECOM_CC)
+score EXAMPLECOM 20.0
+
+meta UDIENZ_UBUNTU (__UDIENZ_MYUBUNTU || __UDIENZ_CANONICAL_RELAY)
+score UDIENZ_UBUNTU 0.05
+
+meta RAD_DEBIANLIST_1 ((__RAD_DEBIANBUG1 || __RAD_DEBIANBUG2) && __RAD_DEBIANBUG3)
+describe RAD_DEBIANLIST_1 Mail come from debbugs.debian.org
+score RAD_DEBIANLIST_1 -10.0
+
+meta UDIENZ_FOREIGN_CHARSET (UDIENZ_UBUNTU && (GB2312_CHARSET || GB2312ENC || KOI8_CHARSET || __KOREAN1 || __KOREAN2 || __KOREAN3))
+score UDIENZ_FOREIGN_CHARSET 3.0
+
+
+meta RELAYCOUNTRY_ID (__RELAYCOUNTRY_ID2 || __RELAYCOUNTRY_ID1)
+score RELAYCOUNTRY_ID1 -1.0
+
+#meta UDIENZ_META1 (UDIENZ_UBUNTU && UDIENZ_HINET)
+#describe UDIENZ_META1 Email to udienz@ubuntu.com, relayed from CN
+#score UDIENZ_META1 15.0
+
+meta SPAM_DIGITLATTER (TO_ENG && DIGITS_LETTERS)
+score SPAM_DIGITLATTER 5.0
+
+meta UDIENZ_FROM_CN (UDIENZ_UBUNTU && RELAYCOUNTRY_CN)
+describe UDIENZ_FROM_CN Email to udienz@ubuntu.com, relayed from CN
+score UDIENZ_FROM_CN 5.0
+
+meta UDIENZ_FROM_LP (__UDIENZ_FROM_GB__ && __UDIENZ_LP__ && __UDIENZ_BULK__)
+describe UDIENZ_FROM_LP Received from Launchpad.net
+score UDIENZ_FROM_LP -10
+
+meta UDIENZ_FROM_CN_MANYTO (UDIENZ_UBUNTU && UDIENZ_HINET && KAM_MANYTO)
+describe UDIENZ_FROM_CN_MANYTO Email to udienz@ubuntu.com, relayed from CN and having many TO
+score UDIENZ_FROM_CN_MANYTO 15.0
+
+meta UDIENZ_MANYTO (UDIENZ_UBUNTU && KAM_MANYTO)
+describe UDIENZ_MANYTO Email to udienz@ubuntu.com and having many TO
+score UDIENZ_MANYTO 5.0
+
+meta UDIENZ_SARE8BIT (UDIENZ_UBUNTU && SARE_HEAD_8BIT_SPAM)
+describe UDIENZ_SARE8BIT Email to udienz@ubuntu.com and contain SARE_HEAD_8BIT_SPAM
+score UDIENZ_SARE8BIT 5.0
+
+meta UDIENZ_HTML ((UDIENZ_UBUNTU || TO_ENG) && HTML_MESSAGE)
+describe UDIENZ_HTML I don't like HTML email
+score UDIENZ_HTML 2.0
+
+# undisclosed receibend, forbidden to, cc
+
+meta UDIENZ_UNDISCLOSED (__UNDISCLOSED_TO || __UNDISCLOSED_CC)
+score UDIENZ_UNDISCLOSED 2.5
+
+meta MISS_SUB_HEAD (MISSING_HEADERS && MISSING_SUBJECT)
+describe MISS_SUB_HEAD missing header and subject
+score MISS_SUB_HEAD 5.0
+
+meta MS_BADHEADERSPAM (UDIENZ_UBUNTU && (SUBJECT_NEEDS_ENCODING || SUBJ_ILLEGAL_CHARS || MISSING_DATE || MISSING_MID))
+describe MS_BADHEADERSPAM Bad header spam
+score MS_BADHEADERSPAM 5.0
+
+meta MS_REPLY (UDIENZ_UBUNTU && ( FROM_NOT_REPLYTO || REPLYTO_WITHOUT_TO_CC))
+describe MS_REPLY To Ubuntu with  From n Reply-To different
+score MS_REPLY 5.0
+
+meta MYFANBOXCOM (__MYFANBOX1 || __MYFANBOX2)
+describe MYFANBOXCOM Spam from myfanbox.com
+score MYFANBOXCOM 10.0
+
+meta FAXSPAM (__TERIMAFAX1 && ( __TERIMAFAX2 && __TERIMAFAX3))
+score FAXSPAM 5.0
+
+meta DOM_SECURITY (KAM_LAZY_DOMAIN_SECURITY && RELAYCOUNTRY_CN)
+score DOM_SECURITY 5.0
