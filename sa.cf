@@ -1,20 +1,5 @@
 ######################### udienz start here ###########
 
-
-include /var/lib/spamassassin/3.003002/70_sare_header_cf_sare_sa-update_dostech_net/200810271100.cf
-include /etc/spamassassin/local/radsby.cf
-include /srv/spamassassin/sandbox/jhardin/20_misc_testing.cf
-include /srv/spamassassin/sandbox/jhardin/20_advance_fee_reevolved.cf
-include /srv/spamassassin/sandbox/jhardin/20_fillform.cf
-include /srv/spamassassin/sandbox/jhardin/20_lotsa_money.cf
-include /srv/spamassassin/sandbox/jhardin/20_MIME_in_body.cf
-include /srv/spamassassin/sandbox/jhardin/20_MIME_no_text.cf
-include /srv/spamassassin/sandbox/jhardin/20_postcards.cf
-include /srv/spamassassin/sandbox/jhardin/20_shared_subrules.cf
-include /srv/spamassassin/sandbox/jhardin/20_tbird_image_spam.cf
-include /srv/spamassassin/sandbox/jhardin/20_thirdparty.cf
-include /srv/spamassassin/sandbox/jhardin/20_uri_obfu_ws.cf
-
 use_bayes 1
 bayes_auto_learn 1
 bayes_ignore_header X-Bogosity
@@ -28,6 +13,8 @@ bayes_ignore_header X-IronPort-AV
 bayes_ignore_header DKIM-Signature
 bayes_ignore_header DomainKey-Signature
 add_header all Bayes score:_BAYES_ _TOKENSUMMARY_ spammytokens:_SPAMMYTOKENS(5)_ hammytokens:_HAMMYTOKENS(5)_
+add_header all Relay-Country _RELAYCOUNTRY_
+add_header all Languages _LANGUAGES_
 
 ## New plugin FromNotReplyTo
 #ifplugin Mail::SpamAssassin::Plugin::FromNotReplyTo
