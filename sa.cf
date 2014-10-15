@@ -28,6 +28,13 @@ ifplugin Mail::SpamAssassin::Plugin::SaveHits
 savehits_dir /var/lib/amavis/savehits/
 endif
 
+## Load from other Rulesets
+score URIBL_BLACK 5
+score BAYES_60 2
+score BAYES_70 2.6
+score BAYES_80 4.2
+score BAYES_90 4.3
+score BAYES_99 5
 
 # DNSBL
 # spam.dnsbl.anonmails.de
@@ -37,6 +44,7 @@ tflags RCVD_IN_ANONMAILS net
 score RCVD_IN_ANONMAILS 5.0
 
 header BARRACUDA_BL eval:check_rbl('barracuda','bb.barracudacentral.org')
+describe BARRACUDA_BL Relay is listed in Barracuda Blocklist
 tflags BARRACUDA_BL net
 score BARRACUDA_BL 5.0
 
@@ -46,10 +54,12 @@ score BARRACUDA_BL 5.0
 #score    URIBL_SBLXBL 4
 
 header RAD_SBLXBL eval:check_rbl('sblxbl','sbl-xbl.spamhaus.org.')
+describe RAD_SBLXBL Relay is listed in sbl-xbl spamhaus
 tflags RAD_SBLXBL net
 score RAD_SBLXBL 5.0
 
 header RCVD_IN_PSBL eval:check_rbl('psbl-lastexternal', 'psbl.surriel.com.')
+describe RCVD_IN_PSBL Relay is listed in psbl.surriel.com
 tflags RCVD_IN_PSBL net
 score RCVD_IN_PSBL 5.0
 
@@ -298,27 +308,35 @@ score KEMENHUT 20
 header __FANBOX1 From =~ /myfanbox.com/i
 header __FANBOX2 Subject =~ /Your FanBox/i
 
-header __TERIMAFAX1 From =~ /fax\@ubuntu.com/
-header __TERIMAFAX2 Subject =~ /received a new fax/
-header __TERIMAFAX3 User-Agent =~ /(Mozilla|Thunderbird|Apple)/i
+header __TERIMAFAX1 From =~ /\bfax\@/
+header __TERIMAFAX2 Subject =~ /(new fax)|(New Fax)/
+header __TERIMAFAX3 User-Agent =~ /(Mozilla|Thunderbird|Apple|Outlook)/i
 
 header EMPTY_SUBJECT Subject =~ /^\s*$/ 
 score EMPTY_SUBJECT 0.5 
 
+header __FLIPORA_FROM From =~ /\@fliporamailer.com/
+header __FLIPORA_NOTIF Subject =~ /You have a new notification/i
 
 #describe __FANBOX1 
 
 ##################################################################################
 ## META ##
 
+meta FLIPORA (__FLIPORA_FROM && __FLIPORA_NOTIF)
+describe FLIPORA Spamming from fliporamailer.com
+score FLIPORA 10.0
 
 meta RELAYCOUNTRY_CN (__UDIENZ_HINET__||__UDIENZ_HINET1__ || __RELAYCOUNTRY_CN1)
-score RELAYCOUNTRY_CN 0.5
+describe RELAYCOUNTRY_CN Relayed from China
+score RELAYCOUNTRY_CN 1.0
 
 meta EXAMPLECOM (__EXAMPLECOM_FROM || EXAMPLECOM_TO || EXAMPLECOM_CC)
+describe EXAMPLECOM generic domain
 score EXAMPLECOM 20.0
 
 meta UDIENZ_UBUNTU (__UDIENZ_MYUBUNTU || __UDIENZ_CANONICAL_RELAY)
+describe UDIENZ_UBUNTU Incoming to my ubuntu addresses
 score UDIENZ_UBUNTU 0.05
 
 meta RAD_DEBIANLIST_1 ((__RAD_DEBIANBUG1 || __RAD_DEBIANBUG2) && __RAD_DEBIANBUG3)
@@ -385,7 +403,8 @@ describe MYFANBOXCOM Spam from myfanbox.com
 score MYFANBOXCOM 10.0
 
 meta FAXSPAM (__TERIMAFAX1 && ( __TERIMAFAX2 && __TERIMAFAX3))
+describe FAXSPAM Spamming with fax messages
 score FAXSPAM 5.0
 
 meta DOM_SECURITY (KAM_LAZY_DOMAIN_SECURITY && RELAYCOUNTRY_CN)
-score DOM_SECURITY 5.0
+score DOM_SECURITY 2.0
