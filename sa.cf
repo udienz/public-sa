@@ -315,15 +315,28 @@ header __TERIMAFAX3 User-Agent =~ /(Mozilla|Thunderbird|Apple|Outlook)/i
 header EMPTY_SUBJECT Subject =~ /^\s*$/ 
 score EMPTY_SUBJECT 0.5 
 
-header __FLIPORA_FROM From =~ /\@fliporamailer.com/
-header __FLIPORA_NOTIF Subject =~ /You have a new notification/i
+header __FLIPORA_FROM1 From =~ /\@fliporamailer.com/
+header __FLIPORA_FROM2 From =~ /\@flipmailer.com/
+header __FLIPORA_FROM3 From =~ /\@infoaxe.net/
+header __FLIPORA_NOTIF1 Subject =~ /You have a new notification/
+header __FLIPORA_NOTIF2 Subject =~ /You still haven.t accepted/
+
+
+header __LLOYDSBANK_ID Message-ID =~ /lloydsbank.com/
+header __LLOYDSBANK_ENV Received =~ /envelope-from/
+header __LLOYDSBANK_RETURN Return-path =~ /lloydsbank.com/
+header __LLOYDSBANK_FROM From =~ /\@lloydsbank.com/
 
 #describe __FANBOX1 
 
 ##################################################################################
 ## META ##
 
-meta FLIPORA (__FLIPORA_FROM && __FLIPORA_NOTIF)
+meta LLOYDSBANK_PISH __LLOYDSBANK_FROM && !(__LLOYDSBANK_ID) && (__LLOYDSBANK_ENV) && !(__LLOYDSBANK_RETURN)
+describe LLOYDSBANK_PISH lloydsbank.com pishing
+score LLOYDSBANK_PISH 10.0
+
+meta FLIPORA ((__FLIPORA_FROM1 || __FLIPORA_FROM2 || __FLIPORA_FROM3) && (__FLIPORA_NOTIF2 || __FLIPORA_NOTIF2) && (__SUBSCRIPTION_INFO || __CLICK_HERE) && __MAIL_LINK )
 describe FLIPORA Spamming from fliporamailer.com
 score FLIPORA 10.0
 
