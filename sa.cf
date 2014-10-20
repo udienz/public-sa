@@ -36,6 +36,10 @@ score BAYES_80 4.2
 score BAYES_90 4.3
 score BAYES_99 5
 
+# blacklist known phising emails
+
+blacklist_from  alertweb2014@gmail.com
+
 # DNSBL
 # spam.dnsbl.anonmails.de
 header RCVD_IN_ANONMAILS eval:check_rbl('anonmails', 'spam.dnsbl.anonmails.de.')
@@ -289,9 +293,9 @@ score AIMSCONSULTANT 100.0
 rawbody SPAM_WELLFARGO  /wellsfargo.com/
 score SPAM_WELLFARGO 20.0
 
-header SPAM_EYD Subject =~ /Penting Pesan/i
-describe SPAM_EYD broken EYD
-score SPAM_EYD 10.0
+#header SPAM_EYD Subject =~ /Penting Pesan/i
+#describe SPAM_EYD broken EYD
+#score SPAM_EYD 10.0
 
 header BERCACAKRA From =~ /bercacakra.com/i
 describe BERCACAKRA spamming from BERCACAKRA.com
@@ -329,8 +333,19 @@ header __LLOYDSBANK_FROM From =~ /\@lloydsbank.com/
 
 #describe __FANBOX1 
 
+body __IDPHISH_SUB /Konfirmasi.identitas.Anda.Webmail|Penting.Pesan/
+body __IDPHISH_NAMA /nama(.)?:/
+body __IDPHISH_EMAIL /E\-mail(.)?:/
+body __IDPHISH_PASS /kata sandi|password(.)?:/
+header __IDPHISH_FROM From =~ /Administrator/
+body __IDPHISH_BODYADMIN /Administrator/
+
 ##################################################################################
 ## META ##
+
+meta PHISH_ID (__IDPHISH_SUB && __IDPHISH_NAMA && __IDPHISH_EMAIL && __IDPHISH_PASS && __IDPHISH_FROM && FREEMAIL_FROM )
+describe PHISH_ID Phishing email with Indonesian language
+score PHISH_ID 10.1
 
 meta LLOYDSBANK_PISH __LLOYDSBANK_FROM && !(__LLOYDSBANK_ID) && (__LLOYDSBANK_ENV) && !(__LLOYDSBANK_RETURN)
 describe LLOYDSBANK_PISH lloydsbank.com pishing
