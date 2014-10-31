@@ -73,7 +73,7 @@ tflags RCVD_IN_DNSBL_INPS_DE	net
 score RCVD_IN_DNSBL_INPS_DE	2.0
 
 #http://comments.gmane.org/gmane.mail.spam.spamassassin.general/145494
-uri    AXB_URI_MLW_DROPBOX    /\/(dropbox|goodlebox|google|kk)\/(document|doc)\.php$/
+uri    AXB_URI_MLW_DROPBOX    /\/(dropbox|goodlebox|google|kk|googlebox|document(s)?)\/(document(s)?|doc(s)?)|invoice(s)?\.php$/
 describe AXB_URI_MLW_DROPBOX Dropbox fake url, see http://w.blankon.in/_4
 score  AXB_URI_MLW_DROPBOX    25.0
 
