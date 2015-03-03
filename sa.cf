@@ -311,6 +311,9 @@ score AIMSCONSULTANT 100.0
 rawbody SPAM_WELLFARGO  /wellsfargo.com/
 score SPAM_WELLFARGO 20.0
 
+## Fake Job Offer
+rawbody UDIENZ_FAKEJOB /((id|uk|eur|euro)homejob|(g|usa)bearn|globbalpresence|comercioes).com|recognizettrauma.net/
+score UDIENZ_FAKEJOB 20
 #header SPAM_EYD Subject =~ /Penting Pesan/i
 #describe SPAM_EYD broken EYD
 #score SPAM_EYD 10.0
