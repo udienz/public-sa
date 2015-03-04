@@ -312,7 +312,7 @@ rawbody SPAM_WELLFARGO  /wellsfargo.com/
 score SPAM_WELLFARGO 20.0
 
 ## Fake Job Offer
-rawbody UDIENZ_FAKEJOB /((id|uk|eur|euro)homejob|(g|usa)bearn|globbalpresence|comercioes).com|recognizettrauma.net/
+rawbody UDIENZ_FAKEJOB /\@((id|uk|eur|euro)homejob|(g|usa)bearn|globbalpresence|comercioes).com|recognizettrauma.net/
 describe UDIENZ_FAKEJOB Fakejob offer See: http://blog.dynamoo.com/2015/03/fake-job-offer-ukhomejobcom-and-many.html
 score UDIENZ_FAKEJOB 20
 #header SPAM_EYD Subject =~ /Penting Pesan/i
