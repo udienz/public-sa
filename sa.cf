@@ -17,11 +17,11 @@ add_header all Relay-Country _RELAYCOUNTRY_
 add_header all Languages _LANGUAGES_
 
 ## New plugin FromNotReplyTo
-#ifplugin Mail::SpamAssassin::Plugin::FromNotReplyTo
+ifplugin Mail::SpamAssassin::Plugin::FromNotReplyTo
  header FROM_NOT_REPLYTO eval:check_for_from_not_reply_to()
  score FROM_NOT_REPLYTO 3.0
  describe FROM_NOT_REPLYTO From: does not match Reply-To:
-#endif
+endif
 
 ## New plugin SaveHits.pm https://github.com/smfreegard/SaveHits
 ifplugin Mail::SpamAssassin::Plugin::SaveHits
@@ -312,7 +312,7 @@ rawbody SPAM_WELLFARGO  /wellsfargo.com/
 score SPAM_WELLFARGO 20.0
 
 ## Fake Job Offer
-rawbody UDIENZ_FAKEJOB /\@((id|uk|eur|euro)homejob|(g|usa)bearn|globbalpresence|indonesianwork|comercioes|easy4edu|worksnhome).com|recognizettrauma.net/
+rawbody UDIENZ_FAKEJOB /\@((id|uk|eur|euro)homejob|(g|usa)bearn|globbalpresence|indonesianwork|jobhomeindo|comercioes|easy4edu|worksnhome).com|recognizettrauma.net/
 describe UDIENZ_FAKEJOB Fakejob offer See: http://blog.dynamoo.com/2015/03/fake-job-offer-ukhomejobcom-and-many.html
 score UDIENZ_FAKEJOB 20
 #header SPAM_EYD Subject =~ /Penting Pesan/i
