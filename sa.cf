@@ -362,6 +362,9 @@ body __IDPHISH_PASS /kata sandi|password(.)?:/
 header __IDPHISH_FROM From =~ /Administrator/
 body __IDPHISH_BODYADMIN /Administrator/
 
+# Fake Mailbox warning
+blacklist_from *@inti.paypai.com
+
 ##################################################################################
 ## META ##
 
