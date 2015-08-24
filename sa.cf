@@ -16,6 +16,10 @@ add_header all Bayes score:_BAYES_ _TOKENSUMMARY_ spammytokens:_SPAMMYTOKENS(5)_
 add_header all Relay-Country _RELAYCOUNTRY_
 add_header all Languages _LANGUAGES_
 
+loadplugin Mail::SpamAssassin::Plugin::RelayCountry
+loadplugin Mail::SpamAssassin::Plugin::Rule2XSBod
+loadplugin Mail::SpamAssassin::Plugin::ASN
+
 ## New plugin FromNotReplyTo
 ifplugin Mail::SpamAssassin::Plugin::FromNotReplyTo
  header FROM_NOT_REPLYTO eval:check_for_from_not_reply_to()
