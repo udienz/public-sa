@@ -3771,9 +3771,9 @@ describe KAM_TUPPERWARE Ads for tupperware
 score    KAM_TUPPERWARE 3.5
 
 # PATRIOT SURVIVAL AND OTHER DISASTER / NATIONALISM / CONSPIRACY SPAM
-header   __KAM_PATRIOT1 From =~ /patriot|disaster|emergency|USAF|shocking|for.truth|nwo|expat|special.op/i
-header   __KAM_PATRIOT2 Subject =~ /the truth about|financial collapse|your guns|hidden (agenda|truth)|unprecedented.crisis|worst.crisis|obama.?care|do not ignore|get a lot worse|coffins.ordered.by.fema|depression|prepared.for.war|free.our.marine|survival.guide|beloved.usa|civil war|shocking.footage|cia.economist|collapse.is.imminent|attack.on|wants.war|disturbing.issue|plane.crash|nuke.deal|extortion/i
-body     __KAM_PATRIOT3 /the truth about|financial collapse|your guns|hidden agenda|unprecedented.crisis|disaster|fema (stock.?piling|storing)|Gor?vernment Not Telling|survival.plan|nation.gone.under|blind.with.patriotism|government shutdown|only chance|civil.unrest|high.crimes|behind.our.back|know.the.truth|PatriotNewsNet|second civil war|for.the.cia|market.crash|american.meltdown|concerned.american|military force|we.were.right|our.suspicions|vindicated|abuse.of.power/i
+header   __KAM_PATRIOT1 From =~ /patriot|disaster|emergency|USAF|shocking|for.truth|nwo|expat|special.op|christianmedia/i
+header   __KAM_PATRIOT2 Subject =~ /the truth about|financial collapse|your guns|hidden (agenda|truth)|unprecedented.crisis|worst.crisis|obama.?care|do not ignore|get a lot worse|coffins.ordered.by.fema|depression|prepared.for.war|free.our.marine|survival.guide|beloved.usa|civil war|shocking.footage|cia.economist|collapse.is.imminent|attack.on|wants.war|disturbing.issue|plane.crash|nuke.deal|extortion|prophecy/i
+body     __KAM_PATRIOT3 /the truth about|financial collapse|your guns|hidden agenda|unprecedented.crisis|disaster|fema (stock.?piling|storing)|Gor?vernment Not Telling|survival.plan|nation.gone.under|blind.with.patriotism|government shutdown|only chance|civil.unrest|high.crimes|behind.our.back|know.the.truth|PatriotNewsNet|second civil war|for.the.cia|market.crash|american.meltdown|concerned.american|military force|we.were.right|our.suspicions|vindicated|abuse.of.power|american.empire/i
 body     __KAM_PATRIOT4 /projectprophet|financial.threat|nuke.deal/i
 
 meta     KAM_PATRIOT (__KAM_PATRIOT1 + __KAM_PATRIOT2 + __KAM_PATRIOT3 + __KAM_PATRIOT4 >= 3)
@@ -4520,8 +4520,8 @@ ifplugin Mail::SpamAssassin::Plugin::MIMEHeader
   # ANOTHER ONE
   header   __KAM_ZERODAY3 Subject =~ /remittance advice|invoice|resume/i
 
-  meta     KAM_ZERODAY2 (__KAM_ZERODAY1 + __KAM_ZERODAY3 >= 2)
-  score    KAM_ZERODAY2 4.5
+  meta     KAM_ZERODAY2 (__KAM_ZERODAY1 + __KAM_ZERODAY3 + KAM_LAZY_DOMAIN_SECURITY >= 3)
+  score    KAM_ZERODAY2 1.5
   describe KAM_ZERODAY2 Another obvious zero-day malware
 endif
 
@@ -4599,9 +4599,9 @@ describe KAM_GRIPPY Spam for sticky grip products
 
 # LIMITED / DISABLED ACCOUNT, ACTIVATION, SECURITY ALERTS, AND OTHER ACCOUNT PHISHES
 header   __KAM_ACCOUNTPHISH1 From =~ /[il]tunes|account|costco|walgreen|amazon|ebay|internal|admin|gold/i
-header   __KAM_ACCOUNTPHISH2 Subject =~ /your.account|is.limited|activate|recover|acknowledgment|of.order|buying.from|order.(status|confirm)|help.?desk|your.order|update.your|security|document|(^secure$)|download.failed|click.to.activate|status.approved|notification.message/i
+header   __KAM_ACCOUNTPHISH2 Subject =~ /your.account|is.limited|activate|recover|acknowledgment|of.order|buying.from|order.(status|confirm)|help.?desk|your.order|update.your|security|document|(^secure$)|download.failed|click.to.activate|status.approved|notification.message|storage.exceeded/i
 body     __KAM_ACCOUNTPHISH3 /update.your.information|problems.with.your|billing.information|order.details|personal.data|detailed.order|order.information|for.activation|account.{1,30}.inactive|information.required|secure.browser|recently.compromised|classified.document|with.your.email|complete.your.account|account.confirmed|claim.your.order|free.money|forced.to.cancel|immediate.access|upgrading.all.staff/i
-body     __KAM_ACCOUNTPHISH4 /outlook|webmail|all.systems|coincide.with|storage.limit|get.back.into|update.your.account|kindly.click|very.private.message|this.is.honest|fill.the.form|click.on.send/i
+body     __KAM_ACCOUNTPHISH4 /outlook|webmail|all.systems|coincide.with|storage.limit|get.back.into|update.your.account|kindly.click|very.private.message|this.is.honest|fill.the.form|click.on.send|follow.here/i
 
 meta     KAM_ACCOUNTPHISH ((__KAM_ACCOUNTPHISH1 || FREEMAIL_FROM) + __KAM_ACCOUNTPHISH2 + __KAM_ACCOUNTPHISH3 + __KAM_ACCOUNTPHISH4 >= 3)
 score    KAM_ACCOUNTPHISH 4.5
