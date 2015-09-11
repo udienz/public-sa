@@ -415,7 +415,7 @@ body		__KAM_STOCKTIP139 /Solanex Management|(\b|^)SLNX(\b|$)/is
 body		__KAM_STOCKTIP140 /BIO-SOLUTIONS|(\b|^)BISU(\b|$)/is
 body		__KAM_STOCKTIP141 /(\b|^)FORC(\b|$)/is
 body		__KAM_STOCKTIP142 /Hawk Systems Inc|(\b|^)HWSYD(\b|$)/is
-body            __KAM_STOCKTIP143 /AmeriLithium|(\b|^)AMEL(\b|$)/is
+body            __KAM_STOCKTIP143 /AmeriLithium/is #|(\b|^)AMEL(\b|$)/is # FP 9/10/15
 body		__KAM_STOCKTIP144 /Fleet Management Solutions|(\b|^)FLMG(\b|$)/is
 body		__KAM_STOCKTIP145 /Nuvilex|(\b|^)N.?V.?L.?X.?(\b|$)/is
 body		__KAM_STOCKTIP146 /Plandai|(\b|^)PLPL(\b|$)/is
@@ -1019,7 +1019,7 @@ body		__KAM_GIFT4	/card will be yours free|card on us|buy you the dyson animal|a
 body		__KAM_GIFT5	/member incentive program|complet(e|ing) the survey|your.customer.id|security.code|promotional.points/i
 header		__KAM_GIFT6	From =~ /\$\d+ ?gift ?card|coupon|home.improvement|reward|voucher|starbucks|exclusive|amazon/i
 
-meta		KAM_GIFT	((__KAM_GIFT1 + __KAM_GIFT2 + __KAM_GIFT3 + __KAM_GIFT4 + __KAM_GIFT5 + KAM_LOTSOFHASH + __KAM_SHORT >= 2) && __KAM_GIFT6)
+meta		KAM_GIFT	((__KAM_GIFT1 + __KAM_GIFT2 + __KAM_GIFT3 + __KAM_GIFT4 + __KAM_GIFT5 + KAM_LOTSOFHASH + __KAM_SHORT >= 3) && __KAM_GIFT6)
 describe	KAM_GIFT	Gift Card Scams
 score		KAM_GIFT	3.5
 
@@ -2131,7 +2131,7 @@ header		__KAM_DRUG2_2	Subject =~ /ambien|Percocet|vicod[i1]n|Meridia|look slim|P
 
 body		__KAM_DRUG2_3	/Medi?cati[o0]ns|desired meds|favou?red (rx)?med|buy remedies|drug store|medicants|medicaments|sexual stim|sex stim|pain killer|(purchase|loved|preferred|favou?rite) (?:rx.?)?(deal|med)[sz]|rx.?Meds?.?deal|buy your meds|choice of meds|Rx.?(deal|Med|Sale)|v[i1]agra|medz.special|loved meds|(rx|medication) ?discount|Get the edge|joint.pain.relief|neuropathy|nerve.pain/i
 
-body            __KAM_DRUG2_4   /Purchase|grab hold|at[_ ~]your[_ ~]finger[_ ~]?tip|placing your order|questions about drugs|prescription is not|don't care about prescription|without a doctor|no need for a doctor|affor[df]able.prices|best daily rx|Fav.Prescript|unmatched.prices|rx.med|millions.are.praising/i
+body            __KAM_DRUG2_4   /grab hold|at[_ ~]your[_ ~]finger[_ ~]?tip|placing your order|questions about drugs|prescription is not|don't care about prescription|without a doctor|no need for a doctor|affor[df]able.prices|best daily rx|Fav.Prescript|unmatched.prices|rx.med|millions.are.praising/i
 
 body            __KAM_DRUG2_5   /0nline|hassle[~-]free|favored rx|branded solutions|branded remedies|v[1i]cod[!i]n|Penhtremine|prxpills|ultimaterxhere|insanerx|speedymed4u|mightymeds1|coolestrxhere|hotrxmedspot|topshoprx|mightyrxhere|qualityrxmedz|legitrxlife|dealsformeds|simplyrxdeals|bestrxlight|ezprescriptz|reliablerxsource1|freetrusted-rx|hotmedsourcehere|CabinetOfMeds|mytrusted-rx|RxwarehouseHere|WarehouseofRxMeds|GreatrxMedsRus|rxmedsrus|(come by|Come to|Check Out) our web site|browse [0o]ur (website|selection)|Visit_0ur Web|Order_Now|available_this week|(buy|order) (n[0o]w|today|right.now|instantly|at [0o]nce|immediately)|check it out today|ord3r|0rder|0rd3r|browseour|rx ?unit/i
 
@@ -3499,7 +3499,7 @@ describe KAM_LOTSOFHASH Emails with lots of hash-like gibberish
 score    KAM_LOTSOFHASH 0.25
 
 #SPAM THAT SHOWS SEVERAL QUESTIONABLE BEHAVIORS IN COMBINATION
-meta     KAM_GRABBAG1 (__KAM_THIRD + __KAM_DOMAINDOTCOM + __KAM_TILDEFROM + HTML_FONT_LOW_CONTRAST + T_REMOTE_IMAGE + __KAM_EPISODE + __KAM_LOTSOFNBSP + __KAM_IPUNSUB + (__KAM_LOTSOFHASH >= 6) >= 3)
+meta     KAM_GRABBAG1 (__KAM_THIRD + __KAM_DOMAINDOTCOM + __KAM_TILDEFROM + HTML_FONT_LOW_CONTRAST + T_REMOTE_IMAGE + __KAM_EPISODE + __KAM_LOTSOFNBSP + __KAM_IPUNSUB + (__KAM_LOTSOFHASH >= 6) >= 4)
 describe KAM_GRABBAG1 A combination of tricks that when combined indicate spam
 score    KAM_GRABBAG1 3.5
 
@@ -4472,10 +4472,6 @@ meta     KAM_NIGERIAN2 (__KAM_NIGERIAN2_1 + DEAR_SOMETHING + LOTS_OF_MONEY >= 3)
 score    KAM_NIGERIAN2 4.5
 describe KAM_NIGERIAN2 Nigerian scam variant
 
-body     KAM_DEAR_SOMEBODY /dear sir.madam/i
-score    KAM_DEAR_SOMEBODY 2.0
-describe KAM_DEAR_SOMEBODY Message that does not know who to address
-
 # FINGERHUT SPAMS
 header   __KAM_FINGERHUT1 From =~ /finger.?hut/i
 header   __KAM_FINGERHUT2 Subject =~ /your.budget|credit.account|qualify|finger.?hut|credit|your.account/i
@@ -5004,5 +5000,10 @@ header   __JMQ_PAYPAL2 From =~ /paypai/i
 meta     JMQ_PAYPAL2 (JMQ_IPINFROM + __JMQ_PAYPAL2 >= 2)
 score    JMQ_PAYPAL2 4.5
 describe JMQ_PAYPAL2 PayPal spam of the day
+
+# RESUME SPAM REDUX PART 2 (WOOHOO)
+meta     JMQ_RESUME3 (__JMQ_RESUME1 && __JMQ_RESUME2 && KAM_THEBAT)
+score    JMQ_RESUME3 3.5
+describe JMQ_RESUME3 Yet more resume spam
 
 #EOF
