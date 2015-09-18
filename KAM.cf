@@ -67,8 +67,8 @@ describe        KAM_PHISH1      Test for PHISH that changes the cursor
 score           KAM_PHISH1      0.01
 
 header          __KAM_PHISH4_1 From =~ /host|apple|amazon|microsoft|windows|express|app.serv|goodluck|bank/i
-body            __KAM_PHISH4_2 /dear.{0,50}customer|automated.message|spam.activities|attempted.gaining.access|your.account.expires|authorized.government/i
-body            __KAM_PHISH4_3 /(confirm|verify|update).your.(identity|account)|account.password|credit.(bureau|profile)|identity.theft|accredited.commission|security.concern/i
+body            __KAM_PHISH4_2 /dear.{0,50}customer|automated.message|spam.activities|attempted.gaining.access|your.account.expires|authorized.government|important.message|message.alert/i
+body            __KAM_PHISH4_3 /(confirm|verify|update).your.(identity|account)|account.password|credit.(bureau|profile)|identity.theft|accredited.commission|security.concern|kindly.find.enclosed/i
 
 ifplugin Mail::SpamAssassin::Plugin::MIMEHeader
   mimeheader    __KAM_PHISH4_4 Content-Type =~ /(verification|information|form).htm/i
@@ -719,7 +719,7 @@ header    __KAM_SEX_EXPLICIT1    Subject =~ /SEXUAL{2,3}Y[-_, ]{0,1}EXPL{1,2}I{1
 header    __KAM_SEX_EXPLICIT2    Subject =~ /(?:fuck .*suck|suck .*fuck|pussy .*cock|cock .*pussy|horny amateur|couch sex|slut fuck|naked celebrity|pissing babes|ass[- ]fuck|animal cock|(^|\b)P.O.R.N |exposes sexy ass|drunk babe nude|masturbate|looking.for.sex|breast.implants|pedophile|child predator|explore.being.bad|double.penetration|hardcore.slut|getting.laid|your.disco.stick|having.sex.*begging|f.ckbook|xxx gay|asian porn|blowjob|anal xxx|huge tits tube|xxx tube|porn tube|porn video|sexy.clip|portal for xxx|3d porn|hard(er)?.erect)|dreaming of f.?cking|(^|\b)sex.in.the.car|horny.virgin|sex.acts|best.intercourse|sex request/i
 header	  __KAM_SEX_EXPLICIT3	 From =~ /(?:better sex|sextrick|ashleymadison|booty.call|breast.(aug|surg|redu)|throbing.member|f[\*u]?ckbook|Local MILFs)/i
 #MODIFIED TO FIX FP THANKS TO DOC SCHNEIDER AND MARK MARTINEC - REMOVED castrate|sexual.encounter|casual.sex|discreet.encounter 5/19/15
-body	  __KAM_SEX_EXPLICIT4	 /(?:fucked hardcore|dildoes her tight ass|kinky watersports|schoolgirls? slut|teens? porn|first anal(\b|$)|pussy lips|kinky lesbian|sucks? cock|rub puss|spreads? cunt|fetish babe|kinky pee|muffdived \& fuck|deepthroat on knees|hello.naughty.boy|certain.type.of.guy|girlfriend.trick|sexual.stamina|sex...toy|porn.link|cunt.fuck|c-o-c-k|non.stop.sex|porn.industry|stronger.erection|make.her.moan|extreme.pro.abortion|erection.problem|your.erection|get.an.erection|hardest.erection|get.erect|xxx gay|asian porn|blowjob porn|anal xxx|huge tits tube|xxx tube|porn tube|fuckbook|portal for xxx|3d porn|DrPEnterprise|girlfriends.porn|\bsex.galler|pussy.eaten|shemale|anal.adventure|black.girls.video|gay.porn|pussy.wet|make.her.horny|crave sex|women.fuck|women.horny|wanting.to.bang|getting.laid.is.simple|woman.on.her.knees|b r e a s t|generic.ed.product|best.s\sex|f[^a-z]cking.you|f[^a-z]ckbuddy|F\#ckFriends|Milf Selfies|need.a.horny.man|cute.sex.lover|horny.as.f.ck|fun.in.the.bedroom|my.tits.are|be.horny|horny.girl|horny.i.am|horny.latina|huge.dildo|made.me.climax|sex in my office|a.good.f\@ck)/i
+body	  __KAM_SEX_EXPLICIT4	 /(?:fucked hardcore|dildoes her tight ass|kinky watersports|schoolgirls? slut|teens? porn|first anal(\b|$)|pussy lips|kinky lesbian|sucks? cock|rub puss|spreads? cunt|fetish babe|kinky pee|muffdived \& fuck|deepthroat on knees|hello.naughty.boy|certain.type.of.guy|girlfriend.trick|sexual.stamina|sex...toy|porn.link|cunt.fuck|c-o-c-k|non.stop.sex|porn.industry|stronger.erection|make.her.moan|extreme.pro.abortion|erection.problem|your.erection|get.an.erection|hardest.erection|get.erect|xxx gay|asian porn|blowjob porn|anal xxx|huge tits tube|xxx tube|porn tube|fuckbook|portal for xxx|3d porn|DrPEnterprise|girlfriends.porn|\bsex.galler|pussy.eaten|shemale|anal.adventure|black.girls.video|gay.porn|pussy.wet|make.her.horny|crave sex|women.fuck|women.horny|wanting.to.bang|getting.laid.is.simple|woman.on.her.knees|b r e a s t|generic.ed.product|best.s\sex|f[^a-z]cking.you|f[^a-z]ckbuddy|F\#ckFriends|Milf Selfies|need.a.horny.man|cute.sex.lover|horny.as.f.ck|fun.in.the.bedroom|my.tits.are|be.horny|horny.girl|horny.i.am|horny.latina|huge.dildo|made.me.climax|sex in my office|a.good.f\@ck|married.horny.woman|sucked.your.d\@ck)/i
 header	  __KAM_SEX_EXPLICIT5	 Subject =~ /(?:Babe.*dildo|milk.*pussy|licks.*lesbian.*tits|mud.*wrestling.*sluts|rock.*hard.*cock|working.*pussy|(anal|suck|lick|hot|cock|wife).*f.?u.?c.?k|sneaky.*upskirt.*shots|hairy.*(pussy|cunt)|chicks.*cum|shows.*off.*titties|tits.*milf.*sex|riding.*big.*dick|dildo.*pussy|slut.*sex|suck.*dick|show.*off.*pink.*slit|coed.*pussy|squirt.*pussy|polish.*cock|femdom.*fist|schoolgirl.*(f.?u.?c.?k|blowjob)|mistress.*finger.*slave|cervix.*examined|tits.*vibrator|licks.*lesbian|slut.*anal|slurp.*pecker|master.*hogtie|bitch.*stroke.*guy|huge.*cock.*bang|take.*dick.*ride|milf.*nailed|girl.*in.*panties|Slut.*Doing.*it|barely.*legal.*teen|perverted.*girl.*works.*ass|slut.*milking|caught.*fucking|F.?u.?c.?k.*(dick)|shemale.*strips|chick.*drilled|\bass.*screw|teen.*pussy|fucked.*hard|bimbo.*hooter|cuntbanged|tittyfucked|fuck.*cock|blowing and nailed|lesbians.*masturbat|shaking wet booty|pussy.*lip|lick.*asshole|kinky lesbian|suck.*cock|rub puss|tits.*cunt|kinky pee|fetish babe|exposes sexy ass|drunk babe nude|muff.*fuck|cock.?suck.*blonde|fuck.*vibrator|threeway.*orgy|sex.life.*new.level|your.sex.life|hotsex)/i
 
 meta	  KAM_SEX_EXPLICIT	(__KAM_SEX_EXPLICIT1 + __KAM_SEX_EXPLICIT2 + __KAM_SEX_EXPLICIT3 + __KAM_SEX_EXPLICIT4 + __KAM_SEX_EXPLICIT5 >= 1)
@@ -1435,9 +1435,9 @@ describe	KAM_ALT		Requests use of an alternate email which may indicate spam
 
 #Right vs Left
 header		__KAM_POLITICS1	From =~ /Right vs Left|Minuteman|Senator|Pennsylvania Transportation Partners|Americans for Limited Government|special election|conservative|liberal|congress|judge|usa.?net|senate|fedup|sen\. |tea.party|the.right.to/i
-body		__KAM_POLITICS2	/Minuteman Civil Defense Corps|National Campaign Fund|Right vs Left|Restore America PAC|penntransportation.com|getliberty.org|Americans for Limited Government|radical|true.conservative|true.liberal|job.killing|wasteful.spending|senate.takeover|liberal.agenda|smear.campaign|america.s future|liberty|obama|governor|election.day|v-o-t-e|sign.the.petition|paid.for.by|dear.conservative|dear.liberal|winning.the.senate|election.cycle|return.power|failed.policy|(left|right).is.claiming|bigwigs/i
+body		__KAM_POLITICS2	/Minuteman Civil Defense Corps|National Campaign Fund|Right vs Left|Restore America PAC|penntransportation.com|getliberty.org|Americans for Limited Government|radical|true.conservative|true.liberal|job.killing|wasteful.spending|senate.takeover|liberal.agenda|smear.campaign|america.s future|liberty|obama|governor|election.day|v-o-t-e|sign.the.petition|paid.for.by|dear.conservative|dear.liberal|winning.the.senate|election.cycle|return.power|failed.policy|(left|right).is.claiming|bigwigs|favorable.voters/i
 header		__KAM_POLITICS3 Received =~ /\.politicalsystems.net|republican.com|democrat.com|inboxfirst.com/i
-header          __KAM_POLITICS4 Subject =~ /alert:?.?election|^elect|(republican|democratic).party|and.vote|impeach|insanity|for.america|election.ad|liberals|conservatives|back.?room.deal|urgent.obama|social.security.mistake|big.social/i
+header          __KAM_POLITICS4 Subject =~ /alert:?.?election|^elect|(republican|democratic).party|and.vote|impeach|insanity|for.america|election.ad|liberals|conservatives|back.?room.deal|urgent.obama|social.security.mistake|big.social|absentee.info/i
 
 meta		KAM_POLITICS	(__KAM_POLITICS1 + __KAM_POLITICS2 + (__KAM_POLITICS3 + __KAM_POLITICS4 >= 1) >= 2)
 score		KAM_POLITICS	9.0
@@ -4514,7 +4514,7 @@ ifplugin Mail::SpamAssassin::Plugin::MIMEHeader
   #score    KAM_ZERODAY 8.0
 
   # ANOTHER ONE
-  header   __KAM_ZERODAY3 Subject =~ /remittance advice|invoice|resume/i
+  header   __KAM_ZERODAY3 Subject =~ /remittance advice|invoice|resume|the.open.message|please.the.open/i
 
   meta     KAM_ZERODAY2 (__KAM_ZERODAY1 + __KAM_ZERODAY3 + KAM_LAZY_DOMAIN_SECURITY >= 3)
   score    KAM_ZERODAY2 1.5
@@ -4594,12 +4594,12 @@ score    KAM_GRIPPY 4.5
 describe KAM_GRIPPY Spam for sticky grip products
 
 # LIMITED / DISABLED ACCOUNT, ACTIVATION, SECURITY ALERTS, AND OTHER ACCOUNT PHISHES
-header   __KAM_ACCOUNTPHISH1 From =~ /[il]tunes|account|costco|walgreen|amazon|ebay|internal|admin|gold/i
-header   __KAM_ACCOUNTPHISH2 Subject =~ /your.account|is.limited|activate|recover|acknowledgment|of.order|buying.from|order.(status|confirm)|help.?desk|your.order|update.your|security|document|(^secure$)|download.failed|click.to.activate|status.approved|notification.message|storage.exceeded/i
-body     __KAM_ACCOUNTPHISH3 /update.your.information|problems.with.your|billing.information|order.details|personal.data|detailed.order|order.information|for.activation|account.{1,30}.inactive|information.required|secure.browser|recently.compromised|classified.document|with.your.email|complete.your.account|account.confirmed|claim.your.order|free.money|forced.to.cancel|immediate.access|upgrading.all.staff/i
-body     __KAM_ACCOUNTPHISH4 /outlook|webmail|all.systems|coincide.with|storage.limit|get.back.into|update.your.account|kindly.click|very.private.message|this.is.honest|fill.the.form|click.on.send|follow.here/i
+header   __KAM_ACCOUNTPHISH1 From =~ /[il]tunes|account|costco|walgreen|amazon|ebay|internal|admin|gold|webmail|provider/i
+header   __KAM_ACCOUNTPHISH2 Subject =~ /your.account|is.limited|activate|recover|acknowledgment|of.order|buying.from|order.(status|confirm)|help.?desk|your.order|update.your|security|document|(^secure$)|download.failed|click.to.activate|status.approved|notification.message|storage.exceeded|maintenance routine|storage.warning/i
+body     __KAM_ACCOUNTPHISH3 /update.your.information|problems.with.your|billing.information|order.details|personal.data|detailed.order|order.information|for.activation|account.{1,30}.inactive|information.required|secure.browser|recently.compromised|classified.document|with.your.email|complete.your.account|account.confirmed|claim.your.order|free.money|forced.to.cancel|immediate.access|upgrading.all.staff|advice.to.update/i
+body     __KAM_ACCOUNTPHISH4 /outlook|webmail|all.systems|coincide.with|storage.limit|get.back.into|update.your.account|kindly.click|very.private.message|this.is.honest|fill.the.form|click.on.send|follow.here|for.all.user|one.click.away/i
 
-meta     KAM_ACCOUNTPHISH ((__KAM_ACCOUNTPHISH1 || FREEMAIL_FROM) + __KAM_ACCOUNTPHISH2 + __KAM_ACCOUNTPHISH3 + __KAM_ACCOUNTPHISH4 >= 3)
+meta     KAM_ACCOUNTPHISH ((__KAM_ACCOUNTPHISH1 || FREEMAIL_FROM || KAM_LAZY_DOMAIN_SECURITY) + __KAM_ACCOUNTPHISH2 + __KAM_ACCOUNTPHISH3 + __KAM_ACCOUNTPHISH4 >= 3)
 score    KAM_ACCOUNTPHISH 4.5
 describe KAM_ACCOUNTPHISH Spam that tries to get account information
 
@@ -5005,5 +5005,12 @@ describe JMQ_PAYPAL2 PayPal spam of the day
 meta     JMQ_RESUME3 (__JMQ_RESUME1 && __JMQ_RESUME2 && KAM_THEBAT)
 score    JMQ_RESUME3 3.5
 describe JMQ_RESUME3 Yet more resume spam
+
+# SPF THAT DOESN'T REALLY CARE IF EMAIL IS A FORGERY
+ifplugin Mail::SpamAssassin::Plugin::AskDNS
+  askdns   JMQ_SPF_NEUTRAL_ALL _SENDERDOMAIN_ TXT /^v=spf1 .+\?all$/
+  describe JMQ_SPF_NEUTRAL_ALL SPF set to ?all!
+  score    JMQ_SPF_NEUTRAL_ALL 2.5
+endif
 
 #EOF
