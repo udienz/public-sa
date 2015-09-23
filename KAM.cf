@@ -5013,4 +5013,13 @@ ifplugin Mail::SpamAssassin::Plugin::AskDNS
   score    JMQ_SPF_NEUTRAL_ALL 2.5
 endif
 
+# IMPORTANT MESSAGE
+header   __JMQ_IMPORTANT1 Subject =~ /(fw|re):? important/i
+body     __JMQ_IMPORTANT2 /important message/i
+body     __JMQ_IMPORTANT3 /please visit/i
+
+meta     JMQ_IMPORTANT (__JMQ_IMPORTANT1 + __JMQ_IMPORTANT2 + __JMQ_IMPORTANT3 + KAM_LAZY_DOMAIN_SECURITY >= 4)
+score    JMQ_IMPORTANT 4.5
+describe JMQ_IMPORTANT Spam that thinks it is important
+
 #EOF
