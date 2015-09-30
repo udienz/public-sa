@@ -1148,8 +1148,8 @@ body		__KAM_LIST1	/((Hospital|MD) directory|Nursing Home (List|directory)|doctor
 body		__KAM_LIST2	/(?:hospital|dentist|chiropractor|physician|medical doctors|nursing directors|medical marketing|\d sortable fields|records all with emails|business director(y|ies)|direct marketing data)|nursing assistant/is
 body		__KAM_LIST3	/price\:|prices for our director/is
 body		__KAM_LIST4	/(?:database|list|[\d,]+ (total records|e-?mails))/is
-body		__KAM_LIST5	/(reply with "stop" as a subject|Send an email with "rem" in the subject to discontinue|put "cease" in the subject of an email|for termination of this e?mail|reply with .{1,8} in the subject)|you will have your email taken off|for the datacard/is
-header		__KAM_LIST6	Subject =~ /Database of (neurological|surgeons|doctors|nurses|mds)|MD Database|looking for list|email database|we have that list|marketing database/i
+body		__KAM_LIST5	/(reply with "stop" as a subject|Send an email with "rem" in the subject to discontinue|put "cease" in the subject of an email|for termination of this e?mail|reply with .{1,8} in the subject)|you will have your email taken off|for the datacard|send.a.reply/is
+header		__KAM_LIST6	Subject =~ /Database of (neurological|surgeons|doctors|nurses|mds)|MD Database|looking for list|email database|we have that list|marketing database|list.of.\d/i
 
 describe	KAM_LIST	Mailing List Database SPAM
 score		KAM_LIST	3.0
